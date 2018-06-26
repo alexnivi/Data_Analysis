@@ -1,39 +1,32 @@
+import re
 import pandas as pd
-import numpy as np
-import requests
 import bs4
-import sys
-
-def get_page(url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'):
-
-	try:
-		pag = requests.get(url)
-	except ValueError:
-		print("URL not a web page. Try again...")
-		return 0
-
-	
-
-	if pag.status_code == 200:
-		print('URL ok, se extrae la info')
-		text = pag.text
-	else: 
-		print(pag + 'URL ERROR, sin info')
-		text = 0
-
-	return text
-
-if __name__ == "__main__":
-   
-	url = sys.argv
-
-	if len(url) == 2:
-		text = get_page(url)
-	else:
-		text = get_page()
-
-	print(text)
-
-   #text = gat_page(url)
+import urllib
 
 
+url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+
+page = urllib.request.urlopen(url).read()
+soup = bs4.BeautifulSoup(page)   
+tab = soup.select('table')[0].select('td')
+
+texto = []
+
+for i in tab:
+	texto.append(i.text)
+texto.insert(0, ' ')
+
+tick = []
+comp = []
+hc = []
+div = []
+
+for n in range(int(len(texto)/9)):
+	ind = 9*(n)
+	if(ind < len(texto)):
+		tick.append(texto[ind+1])
+		comp.append(texto[ind+2])
+		hc.append(texto[ind+6])
+		div.append(texto[ind+4])
+
+db = pd.DataFrame({'Ticker':tick, 'Compañia':comp, 'HeadCuarters':hc, 'Division':div})
