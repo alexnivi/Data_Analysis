@@ -48,4 +48,3 @@ if __name__ == '__main__':
 	base = get_SP_tab()
 	tick = tab.Ticker.tolist()
 	timestamp2 = datetime.datetime.now().timestamp()
-
