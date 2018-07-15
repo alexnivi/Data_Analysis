@@ -9,6 +9,7 @@ import bs4
 import urllib
 import time
 import csv
+import joblib
 
 def get_SP_tab():
 
@@ -73,19 +74,36 @@ def get_ticker_tab(tick, TS1, TS2):
 
 def structure_table(dic):
 
-	return df
+	db = pd.DataFrame.from_dict(dic['indicators']['quote'][0])
+	tmstmp = dic['timestamp']
+	tmstmp = [time.strftime("%d/%b/%Y", time.localtime(int(x))) for x in tmstmp]
+	db['date'] = tmstmp
+	db['ticker'] = dic['meta']['symbol']
+	db = db[['date', 'ticker', 'open', 'high', 'low', 'close', 'volume']]
+
+	return db
 
 if __name__ == '__main__':
 	print('\n\t\t--- Obteniendo Tickers ---\n')
 	base = get_SP_tab()
-	tick = base.Ticker.tolist()
-	today = datetime.now()
-	TS1, TS2 = get_timestamp(today, 500)
 	tickers = base.Ticker.tolist()
+	tickers = [re.sub(r"\.", r"-", i) for i in tickers]
+	today = datetime.now()
+	TS1, TS2 = get_timestamp(today, 900)
 	
-	print('\n\t   ----- Obteniendo información -----\n')
+	print('\n\t    ----- Obteniendo Información -----\n')
 
-	info = get_ticker_tab(tickers[0], TS1, TS2)
+	db = pd.DataFrame()
 
-	print(info)
+	ind = 0
+	tot = len(tickers)
 
+	for i in tickers:
+
+		ind +=1
+		dic = get_ticker_tab(i, TS1, TS2)
+		db = pd.concat([db, structure_table(dic)])
+		print(str(ind) + ' de ' + str(tot) + ' --- ' + i + ' check!')
+
+	joblib.dump(db, 'BaseS&P500.pkl')
+	print('\n\t\t    ----- Done! -----\n')
