@@ -76,7 +76,7 @@ def structure_table(dic):
 
 	db = pd.DataFrame.from_dict(dic['indicators']['quote'][0])
 	tmstmp = dic['timestamp']
-	tmstmp = [time.strftime("%d/%b/%Y", time.localtime(int(x))) for x in tmstmp]
+	tmstmp = [datetime.strptime(time.strftime("%d/%b/%Y", time.localtime(int(x))), "%d/%b/%Y") for x in tmstmp]
 	db['date'] = tmstmp
 	db['ticker'] = dic['meta']['symbol']
 	db = db[['date', 'ticker', 'open', 'high', 'low', 'close', 'volume']]
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 	tickers = base.Ticker.tolist()
 	tickers = [re.sub(r"\.", r"-", i) for i in tickers]
 	today = datetime.now()
-	TS1, TS2 = get_timestamp(today, 900)
+	TS1, TS2 = get_timestamp(today, 950)
 	
 	print('\n\t    ----- Obteniendo Información -----\n')
 
