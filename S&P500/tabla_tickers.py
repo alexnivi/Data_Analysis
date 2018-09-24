@@ -105,5 +105,6 @@ if __name__ == '__main__':
 		db = pd.concat([db, structure_table(dic)])
 		print(str(ind) + ' de ' + str(tot) + ' --- ' + i + ' check!')
 
-	joblib.dump(db, 'BaseS&P500.pkl')
+	joblib.dump(db, 'data/BaseS&P500.pkl')
+	joblib.dump(base, 'data/Tablatickers.pkl')
 	print('\n\t\t    ----- Done! -----\n')
