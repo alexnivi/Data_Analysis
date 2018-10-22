@@ -13,5 +13,6 @@ fi
 
 if [  -f data/BaseS\&P500.pkl ]; then
 	echo "\n\t---- Actualizando datos históricos ----"
-	python 
+	python actualizar_datos.py
 fi
+

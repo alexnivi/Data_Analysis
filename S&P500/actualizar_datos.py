@@ -45,6 +45,7 @@ if __name__ == '__main__':
 
 	db = obtener_tabla_datos(tickers)
 	anterior = joblib.load('data/BaseS&P500.pkl')
-	nueva = pd.concat([anterior, db]).sort_values(['ticker', 'date']).drop_duplicates().reset_index(drop=True)
+	nueva = pd.concat([anterior, db]).sort_values(['ticker', 'date']).drop_duplicates()\
+		.dropna().reset_index(drop=True)
 
 	joblib.dump(nueva, 'data/BaseS&P500.pkl')
