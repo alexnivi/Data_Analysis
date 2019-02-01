@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
+
 from datetime import datetime
 from datetime import timedelta
 import pandas as pd
